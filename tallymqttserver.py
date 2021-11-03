@@ -1,5 +1,5 @@
 import sys
-
+import os
 import os.path
 import time
 from rpi_ws281x import *
@@ -54,11 +54,17 @@ def on_message(mqttc, obj, msg):
     print(msg.topic+" "+str(msg.qos)+" "+str(msg.payload))
     if msg.payload == 'OFF':
             GPIO.output(LED_TALLY, False)
-            colorWipe(strip, Color(0, 0, 0))  # Green wipe
+            colorWipe(strip, Color(0, 0, 0))  # OFF wipe
     if msg.payload == 'ON':
             GPIO.output(LED_TALLY, True)
-            colorWipe(strip, Color(255, 0, 0))  # Green wipe
-
+            colorWipe(strip, Color(255, 0, 0))  # RED wipe
+    if msg.payload == 'ONG':
+            GPIO.output(LED_TALLY, False)
+            colorWipe(strip, Color(0, 255, 0))  # Green wipe
+    if msg.payload == 'Reboot':
+            GPIO.output(LED_TALLY, False)
+            colorWipe(strip, Color(0, 0, 0))  # OFF
+            os.system("sudo reboot")
 
 # Define functions which animate LEDs in various ways.
 def colorWipe(strip, color, wait_ms=50):
